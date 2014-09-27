@@ -47,3 +47,9 @@ settings.py
 #########################
 .idea/
 *.sqlite3
+
+MyBlog/db.sqlite3
+
+MyBlog/db.sqlite3
+
+MyBlog/db.sqlite3

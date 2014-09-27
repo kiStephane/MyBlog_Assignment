@@ -1,5 +1,4 @@
 # Create your views here.
-from django.http import HttpResponseRedirect
 
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -8,10 +7,19 @@ from models import Blog
 from datetime import datetime
 
 
+def set_session_start_time(request):
+    if not request.session.get('session_start_time'):
+        request.session['session_start_time'] = datetime.now().strftime('%a %d, %Y,%I:%M %p')
+
+
 def show_list(request):
+    set_session_start_time(request)
     blog_list = Blog.objects.all()
+
     return render_to_response("blogList.html",
-                              {'blog_list': blog_list, 'modification': None},
+                              {'blog_list': blog_list,
+                               'modification': None,
+                               'session_start_time': request.session.get('session_start_time')},
                               context_instance=RequestContext(request)
     )
 
@@ -50,6 +58,7 @@ def edit_blog(request, blog_id):
                                       )
 
     request.session['edited_version'] = str(blog.version)
+    request.session['start_time'] = datetime.now()
     return render_to_response("edit.html",
                               {'blog': blog},
                               context_instance=RequestContext(request)
