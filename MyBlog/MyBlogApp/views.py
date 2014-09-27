@@ -25,16 +25,27 @@ def edit_blog(request, blog_id):
         blog.title = 'New blog'
         blog.time = datetime.now()
 
-    if request.method == "POST" and request.POST.has_key("content") and request.POST.has_key("title"):
-        blog.content_body = html_to_content(request.POST["content"])
-        blog.title = request.POST["title"]
-        blog.save()
-        return render_to_response("blogList.html",
-                                  {'blog_list': Blog.objects.all(), 'modification': 'add'},
-                                  context_instance=RequestContext(request))
+    if request.method == "POST" and request.POST.has_key("content") and request.POST.has_key("title") \
+            and request.POST.has_key("edited_version"):
+
+        edited_version = int(request.POST["edited_version"])
+        content = html_to_content(request.POST["content"])
+        if edited_version == blog.version:
+            blog.content_body = content
+            blog.title = request.POST["title"]
+            blog.version += 1
+            blog.save()
+            return render_to_response("blogList.html",
+                                      {'blog_list': Blog.objects.all(), 'modification': 'add'},
+                                      context_instance=RequestContext(request))
+        else:
+            return render_to_response("conflict.html",
+                                      {'blog': blog, 'user_content': content},
+                                      context_instance=RequestContext(request)
+                                      )
 
     return render_to_response("edit.html",
-                              {'blog': blog},
+                              {'blog': blog, 'edited_version': blog.version},
                               context_instance=RequestContext(request)
     )
 
@@ -73,5 +84,5 @@ def delete_blog(request, blog_id):
         modification = None
 
     return render_to_response("blogList.html",
-                                  {'blog_list': Blog.objects.all(), 'modification': modification},
-                                  context_instance=RequestContext(request))
+                              {'blog_list': Blog.objects.all(), 'modification': modification},
+                              context_instance=RequestContext(request))
