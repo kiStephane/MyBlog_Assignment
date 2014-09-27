@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <form action="/editblog/{{ blog.id }}/" method="post">
+        {% csrf_token %}
+        Blog Title: <input type="text" name = "title" placeholder="{{ blog.title }} id = {{ blog.id }}"><br>
+        <textarea name="content" cols="80" rows="30">{{ blog.content_body }}</textarea><br>
+        <input type="submit" value="Save">
+    </form>
+
+</body>
+</html>

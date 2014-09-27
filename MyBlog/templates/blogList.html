@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Blogs</title>
+</head>
+<body>
+
+{% if modification == 'add' %}
+<h3> New Blog Added !!!</h3>
+{% elif modification == 'delete' %}
+<h3> One blog deleted!!!</h3>
+{% endif %}
+
+{% for blog in blog_list %}
+<h2> {{ blog.title }} id = {{ blog.id }}   </h2>
+<h3> {{ blog.time }} </h3>
+<textarea> {{ blog.content_body }}</textarea> <br>
+{% endfor %}
+
+</body>
+</html>
