@@ -19,16 +19,21 @@ def show_list(request):
 def edit_blog(request, blog_id):
     if Blog.exists(blog_id):
         blog = Blog.objects.get(id=int(blog_id))
+        modification = 'edit'
     else:
         blog = Blog()
         blog.id = int(blog_id)
         blog.title = 'New blog'
         blog.time = datetime.now()
+        modification = 'add'
 
-    if request.method == "POST" and request.POST.has_key("content") and request.POST.has_key("title") \
-            and request.POST.has_key("edited_version"):
+    if request.method == "POST" and request.POST.has_key("content") and request.POST.has_key("title"):
 
-        edited_version = int(request.POST["edited_version"])
+        if request.session.get('edited_version'):
+            edited_version = int(request.session.get('edited_version'))
+        else:
+            edited_version = -1 #Error
+
         content = html_to_content(request.POST["content"])
         if edited_version == blog.version:
             blog.content_body = content
@@ -36,7 +41,7 @@ def edit_blog(request, blog_id):
             blog.version += 1
             blog.save()
             return render_to_response("blogList.html",
-                                      {'blog_list': Blog.objects.all(), 'modification': 'add'},
+                                      {'blog_list': Blog.objects.all(), 'modification': modification},
                                       context_instance=RequestContext(request))
         else:
             return render_to_response("conflict.html",
@@ -44,8 +49,9 @@ def edit_blog(request, blog_id):
                                       context_instance=RequestContext(request)
                                       )
 
+    request.session['edited_version'] = str(blog.version)
     return render_to_response("edit.html",
-                              {'blog': blog, 'edited_version': blog.version},
+                              {'blog': blog},
                               context_instance=RequestContext(request)
     )
 
