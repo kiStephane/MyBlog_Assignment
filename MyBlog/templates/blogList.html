@@ -24,10 +24,15 @@
 <hr>
 <ol>
  <li>Session start date: {{session_start_time}}</li>
- <li>Articles visited:</li>
- <li>Articles created:</li>
- <li>Articles deleted:</li>
-
+ <li>Articles visited: {{ articles_visited }}</li>
+ <li>Articles edited: {{ articles_edited }}</li>
+ <li>Articles created: {{ articles_created}}</li>
+ <li>Articles deleted: {{ articles_deleted }}</li>
 </ol>
+<form action="/clearsession/" method="post">
+    {% csrf_token %}
+    <input type="submit" name="clearsession" value="clear">
+</form>
+
 
 </html>

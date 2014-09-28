@@ -18,6 +18,8 @@ urlpatterns = patterns('',
 
     url(r'^addblog/$', 'MyBlogApp.views.add_blog'),
 
+    url(r'^clearsession/$', 'MyBlogApp.views.clear_session'),
+
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

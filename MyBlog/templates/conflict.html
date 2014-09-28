@@ -12,7 +12,16 @@
    <p>{{ blog.content_body }}</p>
 
    <h2>Your version</h2>
-   <p>{{ user_content}}</p>
+   <p>{{user_content}}</p>
+
+   <h2>New version</h2>
+   Please combine the current version and your version into a new article
+    <form action="/editblog/{{ blog.id }}/" method="post">
+    {% csrf_token %}
+    <textarea name="content" cols="80" rows="30">{{ blog.content_body }}</textarea><br>
+    <input type="hidden" name="edited_version" value="{{ edited_version }}" />
+    <input type="submit" value="Save">
+  </form>
 
 </body>
 </html>
