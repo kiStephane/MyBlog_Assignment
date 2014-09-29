@@ -21,8 +21,9 @@
 {% endif %}
 
 {% for blog in blog_list %}
-<h2> {{ blog.title }} id = {{ blog.id }}   </h2>
-<h3> {{ blog.time }} </h3>
+<h2> Title: {{ blog.title }}   </h2>
+<h2> Id : {{ blog.id }} </h2>
+<h3> Creation time: {{ blog.time }} </h3>
 <textarea readonly cols="70" rows="20"> {{ blog.content_body }}</textarea> <br> <hr>
 {% endfor %}
 
