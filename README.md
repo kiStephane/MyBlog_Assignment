@@ -1,0 +1,2 @@
+This is an application based on Django framework.
+This application is for an assignment to learn more about concurrency and how to resolve these problems using session and all the features offered by Django.
