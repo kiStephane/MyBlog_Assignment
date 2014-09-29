@@ -5,13 +5,18 @@
     <title>Blog {{ blog.id }}</title>
 </head>
 <body>
+    <a  href="/myblog/"> Home</a>
+
     {% if blog %}
-        <h2> {{ blog.title }} id = {{ blog.id }}   </h2>
-        <h3> {{ blog.time }} </h3>
+        <a  href="/editblog/{{ blog.id }} "> Edit</a>
+        <h2> Title: {{ blog.title }} id = {{ blog.id }}   </h2>
+        <h3> Creation date and time: {{ blog.time }} </h3>
         <textarea readonly cols="80" rows="30"> {{ blog.content_body }}</textarea> <br>
+        <a href="/editblog/{{ blog.id }} "> Edit</a>
     {% else %}
         <h1> This blog does not exist </h1>
     {% endif %}
+    <a href="/myblog/"> Home</a>
 
 </body>
 </html>

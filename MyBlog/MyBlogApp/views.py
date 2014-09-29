@@ -33,10 +33,12 @@ def init_session_data(request):
 def show_list(request):
     init_session_data(request)
     blog_list = Blog.objects.all()
+    modif = request.session['modification']
+    request.session['modification'] = ''
 
     return render_to_response("blogList.html",
                               {'blog_list': blog_list,
-                               'modification': request.session['modification'],
+                               'modification': modif,
                                'blog_modified': request.session['blog_modified'],
                                'session_start_time': request.session.get('session_start_time'),
                                'articles_edited': len(request.session.get('articles_edited')),
@@ -52,18 +54,8 @@ def edit_blog(request, blog_id):
     init_session_data(request)
     if Blog.exists(blog_id):
         blog = Blog.objects.get(id=int(blog_id))
-        if request.session['modification'] == 'addblog_directly':
-            request.session['modification'] = 'add'
-        else:
-            request.session['modification'] = 'edit'
-
     else:
-        blog = Blog()
-        blog.id = int(blog_id)
-        blog.title = 'New blog'
-        blog.time = datetime.now()
-        request.session['articles_created'] = request.session['articles_created'] | {blog_id}
-        request.session['modification'] = 'add'
+        return add_blog(request, int(blog_id))
 
     request.session['blog_modified'] = blog.id
 
@@ -80,15 +72,17 @@ def edit_blog(request, blog_id):
             blog.title = request.POST["title"]
             blog.version += 1
             blog.save()
-            request.session['articles_edited'] = request.session['articles_edited'] | {blog_id}
+            if request.session['modification'] != 'add':
+                request.session['modification'] = 'edit'
+                request.session['articles_edited'] = request.session['articles_edited'] | {blog_id}
             return HttpResponseRedirect('/myblog/')
 
         else:
+            request.session['edited_version'] = str(blog.version)
             return render_to_response("conflict.html",
                                       {'blog': blog, 'user_content': content},
                                       context_instance=RequestContext(request)
                                       )
-
     request.session['edited_version'] = str(blog.version)
     return render_to_response("edit.html",
                               {'blog': blog},
@@ -110,9 +104,11 @@ def display_blog(request, blog_id):
     )
 
 
-def add_blog(request):
+def add_blog(request, blog_id=None):
     init_session_data(request)
     blog = Blog()
+    if blog_id:
+        blog.id = blog_id
     blog.title = 'New Blog'
     blog.content_body = ''
     blog.time = datetime.now()
@@ -120,12 +116,9 @@ def add_blog(request):
     request.session['articles_created'] = request.session['articles_created'] | {blog.id}
     request.session['edited_version'] = str(blog.version)
     request.session['blog_modified'] = str(blog.id)
-    request.session['modification'] = 'addblog_directly'
+    request.session['modification'] = 'add'
 
-    return render_to_response("edit.html",
-                              {'blog': blog},
-                              context_instance=RequestContext(request)
-    )
+    return HttpResponseRedirect('/editblog/' + str(blog.id))
 
 
 def delete_blog(request, blog_id):

@@ -20,16 +20,18 @@
 <h3 class="modif"> One blog edited (id = {{ blog_modified}})!!!</h3>
 {% endif %}
 
+<a href="#session">GO TO THE BOTTOM</a>
+
 {% for blog in blog_list %}
 <h2> Title: {{ blog.title }}   </h2>
 <h2> Id : {{ blog.id }} </h2>
-<h3> Creation time: {{ blog.time }} </h3>
+<h3> Creation date and time: {{ blog.time }} </h3>
 <textarea readonly cols="70" rows="20"> {{ blog.content_body }}</textarea> <br> <hr>
 {% endfor %}
 
 </body>
-<hr>
-<ol>
+
+<ol id = "session">
  <li>Session start date: {{session_start_time}}</li>
  <li>Articles visited: {{ articles_visited }}</li>
  <li>Articles edited: {{ articles_edited }}</li>
