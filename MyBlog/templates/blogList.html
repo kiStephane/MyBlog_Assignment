@@ -3,21 +3,27 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Blogs</title>
+    <style>
+        h3.modif{
+            color: red;
+        }
+
+    </style>
 </head>
 <body>
 
 {% if modification == 'add' %}
-<h3 color="ff0ff0"> New Blog Added !!!</h3>
+<h3 class="modif"> New Blog Added !!!</h3>
 {% elif modification == 'delete' %}
-<h3 color="ff0ff0"> One blog deleted!!!</h3>
+<h3 class="modif"> One blog deleted!!!</h3>
 {% elif modification == 'edit' %}
-<h3 color="ff0ff0"> One blog edited!!!</h3>
+<h3 class="modif"> One blog edited!!!</h3>
 {% endif %}
 
 {% for blog in blog_list %}
 <h2> {{ blog.title }} id = {{ blog.id }}   </h2>
 <h3> {{ blog.time }} </h3>
-<textarea> {{ blog.content_body }}</textarea> <br>
+<textarea cols="70" rows="20"> {{ blog.content_body }}</textarea> <br>
 {% endfor %}
 
 </body>

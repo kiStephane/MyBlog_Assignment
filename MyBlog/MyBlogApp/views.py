@@ -48,7 +48,11 @@ def edit_blog(request, blog_id):
     init_session_data(request)
     if Blog.exists(blog_id):
         blog = Blog.objects.get(id=int(blog_id))
-        request.session['modification'] = 'edit'
+        if request.session['modification'] == 'addblog_directly':
+            request.session['modification'] = 'add'
+        else:
+            request.session['modification'] = 'edit'
+
     else:
         blog = Blog()
         blog.id = int(blog_id)
@@ -109,7 +113,8 @@ def add_blog(request):
     blog.save()
     request.session['articles_created'] = request.session['articles_created'] | {blog.id}
     request.session['edited_version'] = str(blog.version)
-    
+    request.session['modification'] = 'addblog_directly'
+
     return render_to_response("edit.html",
                               {'blog': blog},
                               context_instance=RequestContext(request)
