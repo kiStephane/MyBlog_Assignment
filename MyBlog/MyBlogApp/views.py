@@ -9,7 +9,7 @@ from datetime import datetime
 
 def init_session_data(request):
     if not request.session.get('session_start_time'):
-        request.session['session_start_time'] = datetime.now().strftime('%a %d, %Y,%I:%M %p')
+        request.session['session_start_time'] = datetime.now().strftime('%a %d, %Y, %I:%M %p')
 
     if not request.session.get('articles_edited'):
         request.session['articles_edited'] = set([])
@@ -26,6 +26,9 @@ def init_session_data(request):
     if not request.session.get('modification'):
         request.session['modification'] = None
 
+    if not request.session.get('blog_modified'):
+        request.session['blog_modified'] = None
+
 
 def show_list(request):
     init_session_data(request)
@@ -34,6 +37,7 @@ def show_list(request):
     return render_to_response("blogList.html",
                               {'blog_list': blog_list,
                                'modification': request.session['modification'],
+                               'blog_modified': request.session['blog_modified'],
                                'session_start_time': request.session.get('session_start_time'),
                                'articles_edited': len(request.session.get('articles_edited')),
                                'articles_visited': len(request.session.get('articles_visited')),
@@ -60,6 +64,8 @@ def edit_blog(request, blog_id):
         blog.time = datetime.now()
         request.session['articles_created'] = request.session['articles_created'] | {blog_id}
         request.session['modification'] = 'add'
+
+    request.session['blog_modified'] = blog.id
 
     if request.method == "POST" and request.POST.has_key("content") and request.POST.has_key("title"):
 
@@ -113,6 +119,7 @@ def add_blog(request):
     blog.save()
     request.session['articles_created'] = request.session['articles_created'] | {blog.id}
     request.session['edited_version'] = str(blog.version)
+    request.session['blog_modified'] = str(blog.id)
     request.session['modification'] = 'addblog_directly'
 
     return render_to_response("edit.html",
@@ -125,6 +132,7 @@ def delete_blog(request, blog_id):
     init_session_data(request)
     if Blog.exists(blog_id):
         blog = Blog.objects.get(id=int(blog_id))
+        request.session['blog_modified'] = str(blog.id)
         blog.delete()
         request.session['modification'] = "delete"
         request.session['articles_deleted'] = request.session['articles_deleted'] | {blog_id}

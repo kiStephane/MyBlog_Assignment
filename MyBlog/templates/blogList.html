@@ -13,17 +13,17 @@
 <body>
 
 {% if modification == 'add' %}
-<h3 class="modif"> New Blog Added !!!</h3>
+<h3 class="modif"> New Blog Added (id = {{ blog_modified }})!!!</h3>
 {% elif modification == 'delete' %}
-<h3 class="modif"> One blog deleted!!!</h3>
+<h3 class="modif"> One blog deleted (id = {{ blog_modified }} )!!!</h3>
 {% elif modification == 'edit' %}
-<h3 class="modif"> One blog edited!!!</h3>
+<h3 class="modif"> One blog edited (id = {{ blog_modified}})!!!</h3>
 {% endif %}
 
 {% for blog in blog_list %}
 <h2> {{ blog.title }} id = {{ blog.id }}   </h2>
 <h3> {{ blog.time }} </h3>
-<textarea cols="70" rows="20"> {{ blog.content_body }}</textarea> <br>
+<textarea readonly cols="70" rows="20"> {{ blog.content_body }}</textarea> <br> <hr>
 {% endfor %}
 
 </body>
@@ -37,7 +37,7 @@
 </ol>
 <form action="/clearsession/" method="post">
     {% csrf_token %}
-    <input type="submit" name="clearsession" value="clear">
+    <input type="submit" name="clearsession" value="Clear session">
 </form>
 
 
