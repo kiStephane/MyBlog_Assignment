@@ -1,0 +1,45 @@
+[
+    {"pk": 3,
+        "model": "auth.user",
+        "fields": {
+            "username": "xx",
+            "first_name": "",
+            "last_name": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "last_login": "2014-10-05T17:13:59.408Z",
+            "groups": [],
+            "user_permissions": [],
+            "password": "pbkdf2_sha256$10000$39r16Mvck5d3$IeVuxLaFH83Ht9wEBIPU6n+MhkYQtp8Pp1Ql1LLPsB0=",
+            "email": "",
+            "date_joined": "2014-10-05T17:10:26.304Z"}
+    },
+
+    {"pk": 1,
+        "model": "MyBlogApp.Blog",
+        "fields": {
+            "time": "2014-10-07T00:00:00Z",
+            "title": "Blog about ICT building",
+            "content_body": "The body of the blog"
+        }
+    },
+
+    {"pk": 2,
+        "model": "MyBlogApp.Blog",
+        "fields": {
+            "time": "2014-10-10T00:00:00Z",
+            "title": "Jeannette au bac a sable",
+            "content_body": "This is a test"
+        }
+    },
+
+    {"pk": 3,
+        "model": "MyBlogApp.Blog",
+        "fields": {
+            "time": "2014-10-13T00:00:00Z",
+            "title": "Jeannette au bac a sable",
+            "content_body": "This is a test"
+        }
+    }
+]

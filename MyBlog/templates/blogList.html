@@ -11,6 +11,13 @@
     </style>
 </head>
 <body>
+{% if user %}
+    <h1> Hello, {{ user.username }} !!! </h1>
+{% endif %}
+
+{% if message %}
+    <h2>{{ message }}</h2>
+{% endif %}
 
 {% if modification == 'add' %}
 <h3 class="modif"> New Blog Added (id = {{ blog_modified }})!!!</h3>
@@ -21,12 +28,18 @@
 {% endif %}
 
 <a href="#session">GO TO THE BOTTOM</a>
+<a href="/login/">Log in</a>
+<a href="/logout/">Log out</a>
+<a href="/createuser/">Register</a> <br>
+
+<a href="/addblog/">Create blog</a>
+
 
 {% for blog in blog_list %}
 <h2> Title: {{ blog.title }}   </h2>
 <h2> Id : {{ blog.id }} </h2>
 <h3> Creation date and time: {{ blog.time }} </h3>
-<textarea readonly cols="70" rows="20"> {{ blog.content_body }}</textarea> <br> <hr>
+<textarea readonly cols="50" rows="5"> {{ blog.content_body }}</textarea> <br> <hr>
 {% endfor %}
 
 </body>
