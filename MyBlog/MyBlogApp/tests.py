@@ -88,6 +88,6 @@ class WebServiceTestCase(TestCase):
         self.client = None
 
     def test_(self):
-        content = '''[{"id": 1, "title": "API","content_body":"Desc" }]'''
-        resp = self.client.put("/api/v2/blogs/1/", content)
+        content = '''{"title": "API","content_body":"Desc" }'''
+        resp = self.client.put("/api/v1/blogs/", content)
         self.assertEqual(resp.status_code, 200)

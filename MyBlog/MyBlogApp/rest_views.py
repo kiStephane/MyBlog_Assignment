@@ -1,3 +1,4 @@
+from datetime import datetime
 from rest_framework.renderers import JSONRenderer
 from models import Blog
 
@@ -26,7 +27,7 @@ def blog_create(request):
     """
     if request.method == 'PUT':
         data = JSONParser().parse(request)
-        blog = Blog()
+        blog = Blog(time=datetime.now())
         blog.save()
         serializer = BlogSerializer(blog, data=data)
         if serializer.is_valid():
@@ -37,31 +38,3 @@ def blog_create(request):
 
     else:
         return HttpResponse(status=400)  # Bad request
-
-
-@csrf_exempt
-def blog_detail(request, pk):
-    """
-    Retrieve, update or delete a blog.
-    """
-    try:
-        blog = Blog.objects.get(pk=pk)
-    except Blog.DoesNotExist:
-        return HttpResponse(status=404)
-
-    if request.method == 'GET':
-        serializer = BlogSerializer(blog)
-        return JSONResponse(serializer.data)
-
-    elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = BlogSerializer(blog, data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JSONResponse(serializer.data)
-        else:
-            return JSONResponse(serializer.errors, status=400)
-
-    elif request.method == 'DELETE':
-        blog.delete()
-        return HttpResponse(status=204)

@@ -28,8 +28,6 @@ urlpatterns = patterns('',
 
                        url(r'^api/v1/blogs/$', 'MyBlogApp.rest_views.blog_create', name='blog_create'),
 
-                       url(r'^api/v2/blogs/(?P<pk>[0-9]+)/$', 'MyBlogApp.rest_views.blog_detail', name='blog_detail'),
-
 
                        # Uncomment the admin/doc line below to enable admin documentation:
                        url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
