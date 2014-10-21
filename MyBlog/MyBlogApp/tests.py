@@ -67,7 +67,7 @@ class EditBlogTestCase(TestCase):
 
     def test_after_signed_in_user_redirected_to_edit_form(self):
         resp = self.client.post("/login/?next=/editblog/1/", {"username": self.my_user.username,
-                                                           "password": "xx"})
+                                                              "password": "xx"})
         self.assertEqual(resp.status_code, 302, "The user is redirected")
         self.assertEqual(resp['Location'], 'http://testserver/editblog/1/')
         self.assertRedirects(resp, "/editblog/1/")
@@ -78,3 +78,16 @@ class EditBlogTestCase(TestCase):
         self.assertTrue(login_successful)
         response = self.client.get("/editblog/1/")
         self.assertTemplateUsed(response, "edit.html")
+
+
+class WebServiceTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def tearDown(self):
+        self.client = None
+
+    def test_(self):
+        content = '''[{"id": 1, "title": "API","content_body":"Desc" }]'''
+        resp = self.client.put("/api/v2/blogs/1/", content)
+        self.assertEqual(resp.status_code, 200)

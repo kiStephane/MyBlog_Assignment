@@ -7,7 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from MyBlogApp.blogfy import html_to_content
+from blogfy import html_to_content
 from models import Blog
 from datetime import datetime
 
@@ -17,16 +17,16 @@ def init_session_data(request):
         request.session['session_start_time'] = datetime.now().strftime('%a %d, %Y, %I:%M %p')
 
     if not request.session.get('articles_edited'):
-        request.session['articles_edited'] = set([])
+        request.session['articles_edited'] = []
 
     if not request.session.get('articles_visited'):
-        request.session['articles_visited'] = set([])
+        request.session['articles_visited'] = []
 
     if not request.session.get('articles_created'):
-        request.session['articles_created'] = set([])
+        request.session['articles_created'] = []
 
     if not request.session.get('articles_deleted'):
-        request.session['articles_deleted'] = set([])
+        request.session['articles_deleted'] = []
 
     if not request.session.get('modification'):
         request.session['modification'] = None
@@ -58,6 +58,7 @@ def show_list(request):
                               context_instance=RequestContext(request)
     )
 
+
 @login_required
 def edit_blog(request, blog_id):
     init_session_data(request)
@@ -83,7 +84,7 @@ def edit_blog(request, blog_id):
             blog.save()
             if request.session['modification'] != 'add':
                 request.session['modification'] = 'edit'
-                request.session['articles_edited'] = request.session['articles_edited'] | {blog_id}
+                request.session['articles_edited'] = request.session['articles_edited'].append(blog_id)
             return HttpResponseRedirect('/myblog/')
 
         else:
@@ -103,7 +104,7 @@ def display_blog(request, blog_id):
     init_session_data(request)
     if Blog.exists(blog_id):
         blog = Blog.objects.get(id=int(blog_id))
-        request.session['articles_visited'] = request.session['articles_visited'] | {blog_id}
+        request.session['articles_visited'].append(blog_id)
     else:
         blog = None
 
@@ -111,6 +112,7 @@ def display_blog(request, blog_id):
                               {'blog': blog},
                               context_instance=RequestContext(request)
     )
+
 
 @login_required
 def add_blog(request, blog_id=None):
@@ -122,12 +124,13 @@ def add_blog(request, blog_id=None):
     blog.content_body = ''
     blog.time = datetime.now()
     blog.save()
-    request.session['articles_created'] = request.session['articles_created'] | {blog.id}
+    request.session['articles_created'] = request.session['articles_created'].append(blog.id)
     request.session['edited_version'] = str(blog.version)
     request.session['blog_modified'] = str(blog.id)
     request.session['modification'] = 'add'
 
     return HttpResponseRedirect('/editblog/' + str(blog.id))
+
 
 @login_required
 def delete_blog(request, blog_id):
