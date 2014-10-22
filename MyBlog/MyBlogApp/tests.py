@@ -7,6 +7,7 @@ Replace this with more appropriate tests for your application.
 from django.contrib.auth.models import User
 
 from django.test import TestCase, Client
+from MyBlogApp.models import Blog
 
 
 class CreateBlogTestCase(TestCase):
@@ -87,7 +88,19 @@ class WebServiceTestCase(TestCase):
     def tearDown(self):
         self.client = None
 
-    def test_(self):
+    def test_body_data_is_valid(self):
+        self.assertEqual(Blog.objects.all().count(), 3)
         content = '''{"title": "API","content_body":"Desc" }'''
         resp = self.client.put("/api/v1/blogs/", content)
         self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.content, '''{"id": 4, "title": "API", "content_body": "Desc"}''')
+        new_blog = Blog.objects.get(title="API")
+        self.assertIsNotNone(new_blog)
+        self.assertEqual(Blog.objects.all().count(), 4)
+
+    def test_data_is_not_valid(self):
+        self.assertEqual(Blog.objects.all().count(), 3)
+        content = '''{"titre": "API", "content_body":"Desc" }'''
+        resp = self.client.put("/api/v1/blogs/", content)
+        self.assertEqual(resp.status_code, 400)
+
